@@ -25,8 +25,8 @@ func main() {
 		"<ip>:<port> of the next service endpoint",
 	)
 	flag.Parse()
-	handler := tracerdemo.Identifier(handler)
-	handler = tracerdemo.Logger(handler)
+	//handler := tracerdemo.Identifier(handler)
+	handler := tracerdemo.Logger(handler)
 
 	http.HandleFunc("/", handler)
 	log.Fatal(http.ListenAndServe(":9090", nil))
