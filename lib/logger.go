@@ -1,9 +1,17 @@
 package tracerdemo
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 	"time"
+)
+
+var (
+	Trace   *log.Logger
+	Info    *log.Logger
+	Warning *log.Logger
+	Error   *log.Logger
 )
 
 func Logger(fn http.HandlerFunc) http.HandlerFunc {
@@ -12,12 +20,14 @@ func Logger(fn http.HandlerFunc) http.HandlerFunc {
 
 		fn(w, r)
 
-		log.Printf(
-			"%s\t%s\t%s\t%s",
-			r.Method,
-			r.RequestURI,
-			r.Header.Get("consolidation-id"),
-			time.Since(start),
-		)
+		message := map[string]string{
+			"time":           time.Now(),
+			"level":          "INFO",
+			"service-id":     serviceID,
+			"correlation-id": r.Header.Get("correlation-id"),
+			"method":         r.Method,
+			"uri":            r.RequestURI,
+			"duration":       time.Since(start),
+		}
 	})
 }
